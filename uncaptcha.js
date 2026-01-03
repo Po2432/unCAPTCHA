@@ -51,25 +51,48 @@
     let keyTimes = [];
     let scrollTimes = [];
     let decisionMade = false;
+    let clickIntervals = []; // Track time between clicks
+    let mouseSpeeds = []; // Track mouse speeds for consistency
+    let interactionEvents = []; // Track types of interactions (click, key, scroll)
 
     document.addEventListener('mousemove', (e) => {
       mousePath.push({x: e.clientX, y: e.clientY, time: Date.now()});
       if (mousePath.length > 100) mousePath.shift(); // Keep last 100 points
+      // Track speeds
+      if (mousePath.length > 1) {
+        let last = mousePath[mousePath.length - 1];
+        let prev = mousePath[mousePath.length - 2];
+        let dist = Math.sqrt((last.x - prev.x) ** 2 + (last.y - prev.y) ** 2);
+        let timeDiff = last.time - prev.time;
+        if (timeDiff > 0) mouseSpeeds.push(dist / timeDiff);
+        if (mouseSpeeds.length > 99) mouseSpeeds.shift();
+      }
     });
 
     document.addEventListener('click', () => {
       clickTimes.push(Date.now());
       if (clickTimes.length > 10) clickTimes.shift(); // Keep last 10 clicks
+      // Track intervals
+      if (clickTimes.length > 1) {
+        clickIntervals.push(clickTimes[clickTimes.length - 1] - clickTimes[clickTimes.length - 2]);
+        if (clickIntervals.length > 9) clickIntervals.shift(); // Keep last 9 intervals
+      }
+      interactionEvents.push('click');
+      if (interactionEvents.length > 20) interactionEvents.shift();
     });
 
     document.addEventListener('keydown', () => {
       keyTimes.push(Date.now());
       if (keyTimes.length > 10) keyTimes.shift(); // Keep last 10 key presses
+      interactionEvents.push('key');
+      if (interactionEvents.length > 20) interactionEvents.shift();
     });
 
     document.addEventListener('scroll', () => {
       scrollTimes.push(Date.now());
       if (scrollTimes.length > 10) scrollTimes.shift(); // Keep last 10 scrolls
+      interactionEvents.push('scroll');
+      if (interactionEvents.length > 20) interactionEvents.shift();
     });
 
     checkbox.addEventListener("click", () => {
@@ -153,7 +176,7 @@
     function calculateBotScore() {
       let score = 0.5; // Default
 
-      // Mouse movement score (emphasize straightness and low variance for perfect movements)
+      // Mouse movement score (emphasize straightness, variance, and speed consistency)
       if (mousePath.length >= 10) {
         let start = mousePath[0];
         let end = mousePath[mousePath.length - 1];
@@ -164,40 +187,47 @@
         }
         let straightness = totalDist > 0 ? straightDist / totalDist : 1; // 1 = straight (bot-like)
 
-        let speeds = [];
-        for (let i = 1; i < mousePath.length; i++) {
-          let dist = Math.sqrt((mousePath[i].x - mousePath[i - 1].x) ** 2 + (mousePath[i].y - mousePath[i - 1].y) ** 2);
-          let timeDiff = mousePath[i].time - mousePath[i - 1].time;
-          if (timeDiff > 0) speeds.push(dist / timeDiff);
-        }
-        let avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length || 0;
-        let variance = speeds.reduce((sum, s) => sum + (s - avgSpeed) ** 2, 0) / speeds.length || 0;
-        let speedVarianceScore = Math.min(variance * 10000, 1); // Normalize variance (higher = human)
+        let avgSpeed = mouseSpeeds.reduce((a, b) => a + b, 0) / mouseSpeeds.length || 0;
+        let speedVariance = mouseSpeeds.reduce((sum, s) => sum + (s - avgSpeed) ** 2, 0) / mouseSpeeds.length || 0;
+        let speedConsistency = Math.min(speedVariance * 10000, 1); // Lower variance = more consistent (bot-like)
 
-        // Weight straightness more heavily for perfect movements
-        let mouseScore = (1 - straightness) * 0.6 + speedVarianceScore * 0.4; // Higher = human
-        score = mouseScore;
+        // Near-perfect movement: High straightness + low variance + high consistency
+        let mousePerfection = (straightness * 0.4) + ((1 - speedConsistency) * 0.3) + (speedConsistency * 0.3); // Higher = more perfect (bot-like)
+        score = 1 - mousePerfection; // Invert to human-like score
       }
 
-      // Clicking score: Penalize rapid clicks (e.g., >2 clicks in 1 second)
+      // Clicking score: Penalize rapid clicks (>1 in 1s)
       let recentClicks = clickTimes.filter(t => Date.now() - t < 1000);
-      let clickingScore = recentClicks.length <= 2 ? 1 : 0; // 1 = human, 0 = bot
+      let clickingScore = recentClicks.length <= 1 ? 1 : 0; // 1 = human, 0 = bot
 
-      // Keyboard score: Penalize no recent key presses (bots may not type)
+      // Constant clicking: Penalize regular intervals (low std dev)
+      let constantClickingScore = 1; // Default human
+      if (clickIntervals.length >= 5) {
+        let avgInterval = clickIntervals.reduce((a, b) => a + b, 0) / clickIntervals.length;
+        let intervalVariance = clickIntervals.reduce((sum, i) => sum + (i - avgInterval) ** 2, 0) / clickIntervals.length;
+        let stdDev = Math.sqrt(intervalVariance);
+        constantClickingScore = stdDev > 50 ? 1 : 0; // High std dev = human, low = bot-like
+      }
+
+      // Keyboard score: Penalize no recent key presses
       let recentKeys = keyTimes.filter(t => Date.now() - t < 5000);
       let keyScore = recentKeys.length > 0 ? 1 : 0; // 1 = human, 0 = bot
 
-      // Scrolling score: Penalize no recent scrolls (bots may not scroll)
+      // Scrolling score: Penalize no recent scrolls
       let recentScrolls = scrollTimes.filter(t => Date.now() - t < 5000);
       let scrollScore = recentScrolls.length > 0 ? 1 : 0; // 1 = human, 0 = bot
 
-      // If rapid clicking detected, force score to 0
-      if (clickingScore === 0) {
+      // Interaction variety: Penalize lack of mixed events
+      let uniqueInteractions = new Set(interactionEvents).size;
+      let varietyScore = uniqueInteractions >= 2 ? 1 : 0; // 1 = varied (human), 0 = bot-like
+
+      // If rapid or constant clicking detected, force score to 0
+      if (clickingScore === 0 || constantClickingScore === 0) {
         return 0;
       }
 
       // Average all scores
-      score = (score + clickingScore + keyScore + scrollScore) / 4;
+      score = (score + clickingScore + constantClickingScore + keyScore + scrollScore + varietyScore) / 6;
 
       return Math.max(0, Math.min(1, score)); // Clamp to 0-1
     }
