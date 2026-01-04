@@ -1,4 +1,7 @@
 # unCAPTCHA
+<a href="https://cla-assistant.io/Po2432/unCAPTCHA"><img src="https://cla-assistant.io/readme/badge/Po2432/unCAPTCHA" alt="CLA assistant" /></a> <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/Po2432/unCAPTCHA/total?logo=github">  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/Po2432/unCAPTCHA?logo=github">
+  <img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/Po2432/unCAPTCHA">  <img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-closed/Po2432/unCAPTCHA">
+  <img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-pr/Po2432/unCAPTCHA">   <img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-pr-closed/Po2432/unCAPTCHA">
 
 unCAPTCHA is a simple, client-side CAPTCHA widget for web pages. It provides a checkbox-based verification system with an image selection challenge to distinguish humans from bots. The widget supports light and dark themes, includes a popup mode for larger challenges, and features advanced bot detection in auto mode through tracking user interactions like mouse movement, clicking patterns, keyboard presses, and scrolling.
 > [!CAUTION]
