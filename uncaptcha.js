@@ -18,7 +18,7 @@
             <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
           </svg>
         </button>
-        <a href="" target="_blank" class="uncaptcha-logo-link">
+        <a href="https://github.com/Po2432/unCAPTCHA" target="_blank" class="uncaptcha-logo-link">
           <img src="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.png" alt="unCAPTCHA logo" class="uncaptcha-logo" />
         </a>
       </div>
