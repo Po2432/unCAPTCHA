@@ -1,0 +1,50 @@
+permissions:
+  pull-requests: write
+  issues: write
+  
+name: Auto Close PRs to Pages Branch
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close PRs targeting or including pages branch
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prNumber = pr.number;
+            const baseBranch = pr.base.ref;
+            const headBranch = pr.head.ref;
+
+            // Only act if either base or head branch is 'pages'
+            if (baseBranch === 'pages' || headBranch === 'pages') {
+              // Leave a comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `🚫 This pull request has been automatically closed because it involves the 'pages' branch. 
+The 'pages' branch is reserved for GitHub Pages deployment only, and PRs should not target or originate from it.`
+              });
+
+              // Close the PR
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                state: 'closed'
+              });
+
+              // Lock the conversation with "off-topic" reason
+              await github.rest.issues.lock({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                lock_reason: "off-topic"
+              });
+            }
