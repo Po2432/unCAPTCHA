@@ -1,7 +1,7 @@
 permissions:
   pull-requests: write
   issues: write
-  
+
 name: Auto Close PRs to Pages Branch
 
 on:
@@ -28,8 +28,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: prNumber,
-                body: `🚫 This pull request has been automatically closed because it involves the 'pages' branch. 
-The 'pages' branch is reserved for GitHub Pages deployment only, and PRs should not target or originate from it.`
+                body: "🚫 This pull request has been automatically closed because it involves the 'pages' branch.\n\nThe 'pages' branch is reserved for GitHub Pages deployment only, and PRs should not target or originate from it."
               });
 
               // Close the PR
