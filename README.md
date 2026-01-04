@@ -16,6 +16,8 @@ unCAPTCHA is a simple, client-side CAPTCHA widget for web pages. It provides a c
 - **Bot Detection**: In auto mode, monitors page-wide interactions to detect automated behavior, forcing challenges for suspicious activity.
 - **Responsive**: Fits within a 302px width widget.
 
+## Demo
+You can try unCAPTCHA without any installation [here](https://po2432.github.io/unCAPTCHA/demo.html)
 ## Files
 
 - `uncaptcha.js`: The main JavaScript file that creates and handles the widget, including bot scoring logic.
@@ -75,9 +77,6 @@ Example:
 6. **Verification**: Clicking "Verify" checks selections. Success shows a green tick; failure shows a red cross and locks the widget.
 7. **Reset**: On success or failure, the challenge hides, and the popup button disappears.
 
-### Customization
-
-**OUR LICENSE EXPLICITLY PROHIBITS DERIVATIVE WORKS**
 
 ### Browser Support
 
