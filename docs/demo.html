@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form + unCAPTCHA Demo</title>
+  <link rel="stylesheet" href="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.css">
+</head>
+<body>
+  <h1>Form Submission Demo</h1>
+
+  <form id="demoForm">
+    <label>
+      Your Name:
+      <input type="text" name="name" required>
+    </label>
+    <br><br>
+    <label>
+      Email:
+      <input type="email" name="email" required>
+    </label>
+    <br><br>
+
+    <!-- Place script here so widget appears inside the form -->
+    <script src="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.js" data-mode="always" data-theme="light"></script>
+
+    <br>
+    <button type="submit">Submit Form</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    const form = document.getElementById("demoForm");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", function(e){
+      const verified = form.querySelector(".checkbox-animation.success");
+      if(!verified){
+        e.preventDefault();
+        result.textContent = "❌ Please complete the unCAPTCHA before submitting.";
+      } else {
+        e.preventDefault(); // prevent actual submission for demo
+        result.textContent = "✅ Form submitted successfully with unCAPTCHA verified!";
+      }
+    });
+  </script>
+</body>
+</html>
