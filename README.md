@@ -5,7 +5,7 @@
 
 unCAPTCHA is a simple, client-side CAPTCHA widget for web pages. It provides a checkbox-based verification system with an image selection challenge to distinguish humans from bots. The widget supports light and dark themes, includes a popup mode for larger challenges, and features advanced bot detection in auto mode through tracking user interactions like mouse movement, clicking patterns, keyboard presses, and scrolling.
 > [!CAUTION]
-> This CAPTCHA is purely client side and is not safe for use on any active web page. We are not liable for any damage caused by using this CAPTCHA on any software open to public.
+> This CAPTCHA is purely client side and is not safe for use on any active web page. We are not liable for any damage caused by using this CAPTCHA.
 
 ## Features
 
