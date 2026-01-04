@@ -25,8 +25,8 @@ unCAPTCHA is a simple, client-side CAPTCHA widget for web pages. It provides a c
 
 Link directly to the raw files hosted on GitHub for integration.
 
-- CSS: `https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.css`
-- JS: `https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.js`
+- CSS: `https://po2432.github.io/unCAPTCHA/uncaptcha.css`
+- JS: `https://po2432.github.io/unCAPTCHA/uncaptcha.js`
 - Image: The logo automatically tries `https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.png` and falls back to local `uncaptcha.png` if it fails.
 
 ## Usage
@@ -36,13 +36,13 @@ Link directly to the raw files hosted on GitHub for integration.
 1. Include the CSS in the `<head>` of your HTML:
 
    ```html
-   <link rel="stylesheet" href="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.css">
+   <link rel="stylesheet" href="https://po2432.github.io/unCAPTCHA/uncaptcha.css">
    ```
 
 2. In the `<body>`, place the script tag where you want the widget to appear (it will insert the widget just before the script):
 
    ```html
-   <script src="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.js"></script>
+   <script src="https://po2432.github.io/unCAPTCHA/uncaptcha.js"></script>
    ```
 
    The widget will render as a 302px-wide div with the checkbox, text, popup button, and logo.
@@ -62,7 +62,7 @@ You can customize the widget using data attributes on the `<script>` tag:
 Example:
 
 ```html
-<script src="https://raw.githubusercontent.com/Po2432/unCAPTCHA/main/uncaptcha.js" data-mode="always" data-theme="dark"></script>
+<script src="https://po2432.github.io/unCAPTCHA/uncaptcha.js" data-mode="always" data-theme="dark"></script>
 ```
 
 ### How It Works
@@ -84,5 +84,4 @@ Example:
 Works in modern browsers supporting ES6, CSS Grid, and SVG.
 
 ### License
-This project (including all code and assets) is currently licensed under **All Rights Reserved**.  
-A custom license will be published in `LICENSE.md` in the future.
+See LICENSE.md file.
